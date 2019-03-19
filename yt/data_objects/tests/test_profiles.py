@@ -356,12 +356,12 @@ class TestBadProfiles(unittest.TestCase):
     def test_unequal_data_shape_profile(self):
         density = np.random.random(128)
         temperature = np.random.random(128)
-        cell_mass = np.random.random((128, 128))
+        mass = np.random.random((128, 128))
 
         my_data = {
-            "density": density,
-            "temperature": temperature,
-            "cell_mass": cell_mass}
+            'density': density,
+            'temperature': temperature,
+            'mass': mass}
         fake_ds_med = {"current_time": yt.YTQuantity(10, "Myr")}
         yt.save_as_dataset(fake_ds_med, "mydata.h5", my_data)
 
@@ -369,18 +369,19 @@ class TestBadProfiles(unittest.TestCase):
 
         assert_raises(
             YTProfileDataShape,
-            yt.PhasePlot, ds.data, 'temperature', 'density', 'cell_mass')
+            yt.PhasePlot, ds.data, 'density', 'temperature', 'mass',
+            weight_field='mass')
 
     @requires_module('h5py')
     def test_unequal_bin_field_profile(self):
         density = np.random.random(128)
         temperature = np.random.random(127)
-        cell_mass = np.random.random((128, 128))
+        mass = np.random.random((128, 128))
 
         my_data = {
-            "density": density,
-            "temperature": temperature,
-            "cell_mass": cell_mass}
+            'density': density,
+            'temperature': temperature,
+            'mass' : mass}
         fake_ds_med = {"current_time": yt.YTQuantity(10, "Myr")}
         yt.save_as_dataset(fake_ds_med, "mydata.h5", my_data)
 
@@ -388,7 +389,8 @@ class TestBadProfiles(unittest.TestCase):
 
         assert_raises(
             YTProfileDataShape,
-            yt.PhasePlot, ds.data, 'temperature', 'density', 'cell_mass')
+            yt.PhasePlot, ds.data, 'density', 'temperature', 'mass',
+            weight_field='mass')
 
 def test_index_field_units():
     # see #1849
