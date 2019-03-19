@@ -359,18 +359,19 @@ class TestBadProfiles(unittest.TestCase):
         mass = np.random.random((128, 128))
 
         my_data = {
-            'density': density,
-            'temperature': temperature,
-            'mass': mass}
+            "density": density,
+            "temperature": temperature,
+            "mass": mass}
         fake_ds_med = {"current_time": yt.YTQuantity(10, "Myr")}
-        yt.save_as_dataset(fake_ds_med, "mydata.h5", my_data)
+        # Specify the field type as 'gas' to save_as_dataset
+        field_types = {f:'gas' for f in my_data}
+        yt.save_as_dataset(fake_ds_med, "mydata.h5", my_data, field_types=field_types)
 
         ds = yt.load('mydata.h5')
 
         assert_raises(
             YTProfileDataShape,
-            yt.PhasePlot, ds.data, 'density', 'temperature', 'mass',
-            weight_field='mass')
+            yt.PhasePlot, ds.data, 'temperature', 'density', 'mass')
 
     @requires_module('h5py')
     def test_unequal_bin_field_profile(self):
@@ -379,18 +380,19 @@ class TestBadProfiles(unittest.TestCase):
         mass = np.random.random((128, 128))
 
         my_data = {
-            'density': density,
-            'temperature': temperature,
-            'mass' : mass}
+            "density": density,
+            "temperature": temperature,
+            "mass" : mass}
         fake_ds_med = {"current_time": yt.YTQuantity(10, "Myr")}
-        yt.save_as_dataset(fake_ds_med, "mydata.h5", my_data)
+        # Specify the field type as 'gas' to save_as_dataset
+        field_types = {f:'gas' for f in my_data}
+        yt.save_as_dataset(fake_ds_med, "mydata.h5", my_data, field_types=field_types)
 
         ds = yt.load('mydata.h5')
 
         assert_raises(
             YTProfileDataShape,
-            yt.PhasePlot, ds.data, 'density', 'temperature', 'mass',
-            weight_field='mass')
+            yt.PhasePlot, ds.data, 'temperature', 'density', 'mass')
 
 def test_index_field_units():
     # see #1849
