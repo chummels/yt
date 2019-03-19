@@ -905,7 +905,7 @@ class YTDataContainer(object):
 
     def profile(self, bin_fields, fields, n_bins=64,
                 extrema=None, logs=None, units=None,
-                weight_field="cell_mass",
+                weight_field=('gas', 'mass'),
                 accumulation=False, fractional=False,
                 deposition='ngp'):
         r"""
@@ -1840,7 +1840,7 @@ class YTSelectionContainer3D(YTSelectionContainer):
         >>> ds = yt.load("RedshiftOutput0005")
         >>> ad = ds.all_data()
         >>> cr = ad.cut_region(["obj['temperature'] > 1e6"])
-        >>> print cr.quantities.total_quantity("cell_mass").in_units('Msun')
+        >>> print cr.quantities.total_quantity(('gas', 'mass')).in_units('Msun')
         """
         cr = self.ds.cut_region(self, field_cuts,
                                 field_parameters=field_parameters)
