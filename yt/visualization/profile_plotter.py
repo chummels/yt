@@ -112,10 +112,10 @@ class AxesContainer(OrderedDict):
 
 def sanitize_label(label, nprofiles):
     label = ensure_list(label)
-    
+
     if len(label) == 1:
         label = label * nprofiles
-    
+
     if len(label) != nprofiles:
         raise RuntimeError("Number of labels must match number of profiles")
 
@@ -136,21 +136,21 @@ def data_object_or_all_data(data_source):
 
 class ProfilePlot(object):
     r"""
-    Create a 1d profile plot from a data source or from a list 
+    Create a 1d profile plot from a data source or from a list
     of profile objects.
 
-    Given a data object (all_data, region, sphere, etc.), an x field, 
-    and a y field (or fields), this will create a one-dimensional profile 
+    Given a data object (all_data, region, sphere, etc.), an x field,
+    and a y field (or fields), this will create a one-dimensional profile
     of the average (or total) value of the y field in bins of the x field.
 
-    This can be used to create profiles from given fields or to plot 
-    multiple profiles created from 
+    This can be used to create profiles from given fields or to plot
+    multiple profiles created from
     `yt.data_objects.profiles.create_profile`.
-    
+
     Parameters
     ----------
     data_source : YTSelectionContainer Object
-        The data object to be profiled, such as all_data, region, or 
+        The data object to be profiled, such as all_data, region, or
         sphere. If a dataset is passed in instead, an all_data data object
         is generated internally from the dataset.
     x_field : str
@@ -158,7 +158,7 @@ class ProfilePlot(object):
     y_fields : str or list
         The field or fields to be profiled.
     weight_field : str
-        The weight field for calculating weighted averages.  If None, 
+        The weight field for calculating weighted averages.  If None,
         the profile values are the sum of the field values within the bin.
         Otherwise, the values are a weighted average.
         Default : ('gas', 'mass').
@@ -166,18 +166,18 @@ class ProfilePlot(object):
         The number of bins in the profile.
         Default: 64.
     accumulation : bool
-        If True, the profile values for a bin N are the cumulative sum of 
+        If True, the profile values for a bin N are the cumulative sum of
         all the values from bin 0 to N.
         Default: False.
-    fractional : If True the profile values are divided by the sum of all 
-        the profile data such that the profile represents a probability 
+    fractional : If True the profile values are divided by the sum of all
+        the profile data such that the profile represents a probability
         distribution function.
     label : str or list of strings
-        If a string, the label to be put on the line plotted.  If a list, 
+        If a string, the label to be put on the line plotted.  If a list,
         this should be a list of labels for each profile to be overplotted.
         Default: None.
     plot_spec : dict or list of dicts
-        A dictionary or list of dictionaries containing plot keyword 
+        A dictionary or list of dictionaries containing plot keyword
         arguments.  For example, dict(color="red", linestyle=":").
         Default: None.
     x_log : bool
@@ -186,7 +186,7 @@ class ProfilePlot(object):
         Default: None
     y_log : dict
         A dictionary containing field:boolean pairs, setting the logarithmic
-        property for that field. May be overridden after instantiation using 
+        property for that field. May be overridden after instantiation using
         set_log.
         Default: None
 
@@ -198,7 +198,8 @@ class ProfilePlot(object):
     >>> import yt
     >>> ds = yt.load("enzo_tiny_cosmology/DD0046/DD0046")
     >>> ad = ds.all_data()
-    >>> plot = ProfilePlot(ad, "density", ["temperature", "velocity_x"],
+    >>> plot = ProfilePlot(ad, ('gas', 'density'),
+    ...                    [('gas', 'temperature'), ('gas', 'velocity_x')],
     ...                    weight_field=('gas', 'mass'),
     ...                    plot_spec=dict(color='red', linestyle="--"))
     >>> plot.save()
@@ -213,9 +214,9 @@ class ProfilePlot(object):
     >>> plot_specs = []
     >>> for ds in es[-4:]:
     ...     ad = ds.all_data()
-    ...     profiles.append(create_profile(ad, ["density"],
-    ...                                    fields=["temperature",
-    ...                                            "velocity_x"]))
+    ...     profiles.append(create_profile(ad, [('gas', 'density')],
+    ...                                    fields=[('gas', 'temperature'),
+    ...                                            ('gas', 'velocity_x')]))
     ...     labels.append(ds.current_redshift)
     ...     plot_specs.append(dict(linestyle="--", alpha=0.7))
     >>>
@@ -224,7 +225,7 @@ class ProfilePlot(object):
     >>> plot.save()
 
     Use set_line_property to change line properties of one or all profiles.
-    
+
     """
 
     x_log = None
@@ -336,7 +337,8 @@ class ProfilePlot(object):
 
         >>> import yt
         >>> ds = yt.load('IsolatedGalaxy/galaxy0030/galaxy0030')
-        >>> pp = ProfilePlot(ds.all_data(), 'density', 'temperature')
+        >>> pp = ProfilePlot(ds.all_data(), ('gas', 'density'),
+        ...                                 ('gas', 'temperature'))
         >>> pp.show()
 
         """
@@ -464,16 +466,16 @@ class ProfilePlot(object):
         >>> plot_specs = []
         >>> for ds in es[-4:]:
         ...     ad = ds.all_data()
-        ...     profiles.append(create_profile(ad, ["Density"],
-        ...                                    fields=["Temperature",
-        ...                                            "x-velocity"]))
+        ...     profiles.append(create_profile(ad, [('gas', 'density')],
+        ...                                    fields=[('gas', 'temperature'),
+        ...                                            ('gas', 'velocity_x')]))
         ...     labels.append(ds.current_redshift)
         ...     plot_specs.append(dict(linestyle="--", alpha=0.7))
         >>>
         >>> plot = ProfilePlot.from_profiles(profiles, labels=labels,
         ...                                  plot_specs=plot_specs)
         >>> plot.save()
-        
+
         """
         if labels is not None and len(profiles) != len(labels):
             raise RuntimeError("Profiles list and labels list must be the same size.")
@@ -494,7 +496,7 @@ class ProfilePlot(object):
         value : str, int, float
             The value to set for the line property.
         index : int
-            The index of the profile in the list of profiles to be 
+            The index of the profile in the list of profiles to be
             changed.  If None, change all plotted lines.
             Default : None.
 
@@ -506,7 +508,7 @@ class ProfilePlot(object):
 
         Change a single line.
         plot.set_line_property("linewidth", 4, index=0)
-        
+
         """
         if index is None:
             specs = self.plot_spec
@@ -607,7 +609,7 @@ class ProfilePlot(object):
 
         Parameters
         ----------
-        
+
         xmin : float or None
           The new x minimum.  Defaults to None, which leaves the xmin
           unchanged.
@@ -621,7 +623,8 @@ class ProfilePlot(object):
 
         >>> import yt
         >>> ds = yt.load('IsolatedGalaxy/galaxy0030/galaxy0030')
-        >>> pp = yt.ProfilePlot(ds.all_data(), 'density', 'temperature')
+        >>> pp = yt.ProfilePlot(ds.all_data(), ('gas', 'density'),
+        ...                                    ('gas', 'temperature'))
         >>> pp.set_xlim(1e-29, 1e-24)
         >>> pp.save()
 
@@ -665,7 +668,7 @@ class ProfilePlot(object):
         field : string or field tuple
 
         The field that we want to adjust the plot limits for.
-        
+
         ymin : float or None
           The new y minimum.  Defaults to None, which leaves the ymin
           unchanged.
@@ -679,8 +682,10 @@ class ProfilePlot(object):
 
         >>> import yt
         >>> ds = yt.load('IsolatedGalaxy/galaxy0030/galaxy0030')
-        >>> pp = yt.ProfilePlot(ds.all_data(), 'density', ['temperature', 'x-velocity'])
-        >>> pp.set_ylim('temperature', 1e4, 1e6)
+        >>> pp = yt.ProfilePlot(ds.all_data(), ('gas', 'density'),
+        ...                     [('gas', 'temperature'),
+        ...                      ('gas', 'velocity_x')])
+        >>> pp.set_ylim(('gas', 'temperature'), 1e4, 1e6)
         >>> pp.save()
 
         """
@@ -763,11 +768,13 @@ class ProfilePlot(object):
         >>> plot.annotate_title("This is a Profile Plot")
 
         >>> # To set title for specific fields:
-        >>> plot.annotate_title("Profile Plot for Temperature", "temperature")
+        >>> plot.annotate_title("Profile Plot for Temperature",
+        ...                     ('gas', 'temperature'))
 
         >>> # Setting same plot title for both the given fields
         >>> plot.annotate_title("Profile Plot: Temperature-Dark Matter Density",
-                                ["temperature", "dark_matter_density"])
+        ...                     [('gas', 'temperature'),
+        ...                      ('deposit', 'dark_matter_density')])
 
         """
         if field is 'all':
@@ -807,18 +814,20 @@ class ProfilePlot(object):
         >>>  from yt.units import kpc
         >>>  ds = yt.load('IsolatedGalaxy/galaxy0030/galaxy0030')
         >>>  my_galaxy = ds.disk(ds.domain_center, [0.0, 0.0, 1.0], 10*kpc, 3*kpc)
-        >>>  plot = yt.ProfilePlot(my_galaxy, "density", ["temperature"])
+        >>>  plot = yt.ProfilePlot(my_galaxy, ('gas', 'density'),
+        ...                       [('gas', 'temperature')])
 
         >>>  # Annotate text for all the fields
         >>>  plot.annotate_text(1e-26, 1e5, "This is annotated text in the plot area.")
         >>>  plot.save()
 
         >>>  # Annotate text for a given field
-        >>>  plot.annotate_text(1e-26, 1e5, "Annotated text", "Temperature")
+        >>>  plot.annotate_text(1e-26, 1e5, "Annotated text",
+        ...                     ('gas', 'temperature'))
         >>>  plot.save()
 
         >>>  # Annotate text for multiple fields
-        >>>  fields = ["temperature", "density"]
+        >>>  fields = [('gas', 'temperature'), ('gas', 'density')]
         >>>  plot.annotate_text(1e-26, 1e5, "Annotated text", fields)
         >>>  plot.save()
 
@@ -839,19 +848,19 @@ class ProfilePlot(object):
 
 class PhasePlot(ImagePlotContainer):
     r"""
-    Create a 2d profile (phase) plot from a data source or from 
-    profile object created with 
+    Create a 2d profile (phase) plot from a data source or from
+    profile object created with
     `yt.data_objects.profiles.create_profile`.
 
-    Given a data object (all_data, region, sphere, etc.), an x field, 
-    y field, and z field (or fields), this will create a two-dimensional 
-    profile of the average (or total) value of the z field in bins of the 
+    Given a data object (all_data, region, sphere, etc.), an x field,
+    y field, and z field (or fields), this will create a two-dimensional
+    profile of the average (or total) value of the z field in bins of the
     x and y fields.
 
     Parameters
     ----------
     data_source : YTSelectionContainer Object
-        The data object to be profiled, such as all_data, region, or 
+        The data object to be profiled, such as all_data, region, or
         sphere. If a dataset is passed in instead, an all_data data object
         is generated internally from the dataset.
     x_field : str
@@ -861,7 +870,7 @@ class PhasePlot(ImagePlotContainer):
     z_fields : str or list
         The field or fields to be profiled.
     weight_field : str
-        The weight field for calculating weighted averages.  If None, 
+        The weight field for calculating weighted averages.  If None,
         the profile values are the sum of the field values within the bin.
         Otherwise, the values are a weighted average.
         Default : ('gas', 'mass'),
@@ -872,14 +881,14 @@ class PhasePlot(ImagePlotContainer):
         The number of bins in y field for the profile.
         Default: 128.
     accumulation : bool or list of bools
-        If True, the profile values for a bin n are the cumulative sum of 
-        all the values from bin 0 to n.  If -True, the sum is reversed so 
-        that the value for bin n is the cumulative sum from bin N (total bins) 
+        If True, the profile values for a bin n are the cumulative sum of
+        all the values from bin 0 to n.  If -True, the sum is reversed so
+        that the value for bin n is the cumulative sum from bin N (total bins)
         to n.  A list of values can be given to control the summation in each
         dimension independently.
         Default: False.
-    fractional : If True the profile values are divided by the sum of all 
-        the profile data such that the profile represents a probability 
+    fractional : If True the profile values are divided by the sum of all
+        the profile data such that the profile represents a probability
         distribution function.
     fontsize: int
         Font size for all text in the plot.
@@ -894,8 +903,8 @@ class PhasePlot(ImagePlotContainer):
     >>> import yt
     >>> ds = yt.load("enzo_tiny_cosmology/DD0046/DD0046")
     >>> ad = ds.all_data()
-    >>> plot = PhasePlot(ad, "density", "temperature", [('gas', 'mass')],
-    ...                  weight_field=None)
+    >>> plot = PhasePlot(ad, ('gas', 'density'), ('gas', 'temperature'),
+    ...                  [('gas', 'mass')], weight_field=None)
     >>> plot.save()
 
     >>> # Change plot properties.
@@ -1166,9 +1175,11 @@ class PhasePlot(ImagePlotContainer):
         ... 'temperature': (1e1, 1e8),
         ... ('gas', 'mass'): (1e-6, 1e-1),
         ... }
-        >>> profile = yt.create_profile(ds.all_data(), ['density', 'temperature'],
-        ...                             fields=[('gas', 'mass')],extrema=extrema,
-        ...                             fractional=True)
+        >>> profile = yt.create_profile(ds.all_data(),
+        ...                             [('gas', 'density'),
+        ...                              ('gas', 'temperature')],
+        ...                             fields=[('gas', 'mass')],
+        ...                             extrema=extrema, fractional=True)
         >>> ph = yt.PhasePlot.from_profile(profile)
         >>> ph.save()
         """
@@ -1180,14 +1191,14 @@ class PhasePlot(ImagePlotContainer):
     def annotate_text(self, xpos=0.0, ypos=0.0, text=None, **text_kwargs):
         r"""
         Allow the user to insert text onto the plot
-        The x-position and y-position must be given as well as the text string. 
+        The x-position and y-position must be given as well as the text string.
         Add *text* tp plot at location *xpos*, *ypos* in plot coordinates
         (see example below).
 
         Parameters
         ----------
         field: str or tuple
-          The name of the field to add text to. 
+          The name of the field to add text to.
         xpos: float
           Position on plot in x-coordinates.
         ypos: float
@@ -1279,7 +1290,7 @@ class PhasePlot(ImagePlotContainer):
         ----------
 
         font_dict : dict
-            A dict of keyword parameters to be passed to 
+            A dict of keyword parameters to be passed to
             :class:`matplotlib.font_manager.FontProperties`.
 
             Possible keys include:
@@ -1287,10 +1298,10 @@ class PhasePlot(ImagePlotContainer):
             * family - The font family. Can be serif, sans-serif, cursive,
               'fantasy', or 'monospace'.
             * style - The font style. Either normal, italic or oblique.
-            * color - A valid color string like 'r', 'g', 'red', 'cobalt', 
+            * color - A valid color string like 'r', 'g', 'red', 'cobalt',
               and 'orange'.
             * variant - Either normal or small-caps.
-            * size - Either a relative value of xx-small, x-small, small, 
+            * size - Either a relative value of xx-small, x-small, small,
               medium, large, x-large, xx-large or an absolute font size, e.g. 12
             * stretch - A numeric value in the range 0-1000 or one of
               ultra-condensed, extra-condensed, condensed, semi-condensed,
@@ -1313,7 +1324,7 @@ class PhasePlot(ImagePlotContainer):
         This sets the font to be 24-pt, blue, sans-serif, italic, and
         bold-face.
 
-        >>> prof = ProfilePlot(ds.all_data(), 'density', 'temperature')
+        >>> prof = ProfilePlot(ds, ('gas', 'density'), ('gas', 'temperature'))
         >>> slc.set_font({'family':'sans-serif', 'style':'italic',
         ...               'weight':'bold', 'size':24, 'color':'blue'})
 
@@ -1493,7 +1504,9 @@ class PhasePlot(ImagePlotContainer):
 
         >>> import yt
         >>> ds = yt.load('IsolatedGalaxy/galaxy0030/galaxy0030')
-        >>> pp = yt.PhasePlot(ds.all_data(), 'density', 'temperature', ('gas', 'mass'))
+        >>> pp = yt.PhasePlot(ds, ('gas', 'density'),
+        ...                       ('gas', 'temperature'),
+        ...                       ('gas', 'mass'))
         >>> pp.set_ylim(1e4, 1e6)
         >>> pp.save()
 
