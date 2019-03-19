@@ -659,7 +659,7 @@ class SampleAtMinFieldValues(SampleAtMaxFieldValues):
     >>> ds = load("IsolatedGalaxy/galaxy0030/galaxy0030")
     >>> ad = ds.all_data()
     >>> print ad.quantities.sample_at_min_field_values(("gas", "density"),
-    ...         ["temperature", "velocity_magnitude"])
+    ...         [('gas', 'temperature'), ('gas', 'velocity_magnitude')])
 
     """
     def _func(self, arr):
