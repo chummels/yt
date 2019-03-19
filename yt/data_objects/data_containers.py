@@ -967,7 +967,7 @@ class YTDataContainer(object):
         ...                          [("gas", "temperature"),
         ...                          ("gas", "velocity_x")])
         >>> print (profile.x)
-        >>> print (profile["gas", "temperature"])
+        >>> print (profile[("gas", "temperature")])
         >>> plot = profile.plot()
         """
         p = create_profile(self, bin_fields, fields, n_bins,
@@ -1894,8 +1894,8 @@ class YTSelectionContainer3D(YTSelectionContainer):
 
         >>> dd = ds.all_data()
         >>> rho = dd.quantities["WeightedAverageQuantity"](
-        ...     "Density", weight="CellMassMsun")
-        >>> verts = dd.extract_isocontours("Density", rho,
+        ...     ('gas', 'density'), weight=('gas', 'mass'))
+        >>> verts = dd.extract_isocontours(('gas', 'density'), rho,
         ...             "triangles.obj", True)
         """
         from yt.data_objects.static_output import ParticleDataset
@@ -2006,9 +2006,10 @@ class YTSelectionContainer3D(YTSelectionContainer):
 
         >>> dd = ds.all_data()
         >>> rho = dd.quantities["WeightedAverageQuantity"](
-        ...     "Density", weight="CellMassMsun")
-        >>> flux = dd.calculate_isocontour_flux("Density", rho,
-        ...     "velocity_x", "velocity_y", "velocity_z", "Metal_Density")
+        ...     ('gas', 'density'), weight=('gas', 'mass'))
+        >>> flux = dd.calculate_isocontour_flux(('gas', 'density'), rho,
+        ...     ('gas', 'velocity_x'), ('gas', 'velocity_y'), 
+        ...     ('gas', 'velocity_z'), ('gas', 'metal_density'))
         """
         flux = 0.0
         for block, mask in self.blocks:
