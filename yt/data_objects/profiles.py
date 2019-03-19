@@ -344,18 +344,18 @@ been deprecated, use profile.standard_deviation instead."""
         >>> ds = yt.load("enzo_tiny_cosmology/DD0046/DD0046")
         >>> ad = ds.all_data()
         >>> profile = yt.create_profile(ad, ["density", "temperature"],
-        ...                            "cell_mass", weight_field=None,
+        ...                            ('gas', 'mass'), weight_field=None,
         ...                             n_bins=(128, 128))
         >>> fn = profile.save_as_dataset()
         >>> prof_ds = yt.load(fn)
-        >>> print (prof_ds.data["cell_mass"])
+        >>> print (prof_ds.data[('gas', 'mass')])
         (128, 128)
         >>> print (prof_ds.data["x"].shape) # x bins as 1D array
         (128,)
         >>> print (prof_ds.data["density"]) # x bins as 2D array
         (128, 128)
         >>> p = yt.PhasePlot(prof_ds.data, "density", "temperature",
-        ...                  "cell_mass", weight_field=None)
+        ...                  ('gas', 'mass'), weight_field=None)
         >>> p.save()
 
         """
@@ -966,7 +966,7 @@ def sanitize_field_tuple_keys(input_dict, data_source):
 
 def create_profile(data_source, bin_fields, fields, n_bins=64,
                    extrema=None, logs=None, units=None,
-                   weight_field="cell_mass",
+                   weight_field=('gas', 'mass'),
                    accumulation=False, fractional=False,
                    deposition='ngp', override_bins=None):
     r"""
@@ -1001,7 +1001,7 @@ def create_profile(data_source, bin_fields, fields, n_bins=64,
     weight_field : str or tuple field identifier
         The weight field for computing weighted average for the profile
         values.  If None, the profile values are sums of the data in
-        each bin. Defaults to "cell_mass".
+        each bin. Defaults to ('gas', 'mass').
     accumulation : bool or list of bools
         If True, the profile values for a bin n are the cumulative sum of
         all the values from bin 0 to n.  If -True, the sum is reversed so
