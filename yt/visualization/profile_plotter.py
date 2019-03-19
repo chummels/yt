@@ -161,7 +161,7 @@ class ProfilePlot(object):
         The weight field for calculating weighted averages.  If None, 
         the profile values are the sum of the field values within the bin.
         Otherwise, the values are a weighted average.
-        Default : "cell_mass".
+        Default : ('gas', 'mass').
     n_bins : int
         The number of bins in the profile.
         Default: 64.
@@ -199,7 +199,7 @@ class ProfilePlot(object):
     >>> ds = yt.load("enzo_tiny_cosmology/DD0046/DD0046")
     >>> ad = ds.all_data()
     >>> plot = ProfilePlot(ad, "density", ["temperature", "velocity_x"],
-    ...                    weight_field="cell_mass",
+    ...                    weight_field=('gas', 'mass'),
     ...                    plot_spec=dict(color='red', linestyle="--"))
     >>> plot.save()
 
@@ -234,7 +234,7 @@ class ProfilePlot(object):
     _plot_valid = False
 
     def __init__(self, data_source, x_field, y_fields,
-                 weight_field="cell_mass", n_bins=64,
+                 weight_field=('gas', 'mass'), n_bins=64,
                  accumulation=False, fractional=False,
                  label=None, plot_spec=None,
                  x_log=None, y_log=None):
@@ -864,7 +864,7 @@ class PhasePlot(ImagePlotContainer):
         The weight field for calculating weighted averages.  If None, 
         the profile values are the sum of the field values within the bin.
         Otherwise, the values are a weighted average.
-        Default : "cell_mass".
+        Default : ('gas', 'mass'),
     x_bins : int
         The number of bins in x field for the profile.
         Default: 128.
@@ -894,13 +894,13 @@ class PhasePlot(ImagePlotContainer):
     >>> import yt
     >>> ds = yt.load("enzo_tiny_cosmology/DD0046/DD0046")
     >>> ad = ds.all_data()
-    >>> plot = PhasePlot(ad, "density", "temperature", ["cell_mass"],
+    >>> plot = PhasePlot(ad, "density", "temperature", [('gas', 'mass')],
     ...                  weight_field=None)
     >>> plot.save()
 
     >>> # Change plot properties.
-    >>> plot.set_cmap("cell_mass", "jet")
-    >>> plot.set_zlim("cell_mass", 1e8, 1e13)
+    >>> plot.set_cmap(('gas', 'mass'), "jet")
+    >>> plot.set_zlim(('gas', 'mass'), 1e8, 1e13)
     >>> plot.annotate_title("This is a phase plot")
 
     """
@@ -914,7 +914,7 @@ class PhasePlot(ImagePlotContainer):
     _ylim = (None, None)
 
     def __init__(self, data_source, x_field, y_field, z_fields,
-                 weight_field="cell_mass", x_bins=128, y_bins=128,
+                 weight_field=('gas', 'mass'), x_bins=128, y_bins=128,
                  accumulation=False, fractional=False,
                  fontsize=18, figure_size=8.0):
 
@@ -1164,10 +1164,10 @@ class PhasePlot(ImagePlotContainer):
         >>> extrema = {
         ... 'density': (1e-31, 1e-24),
         ... 'temperature': (1e1, 1e8),
-        ... 'cell_mass': (1e-6, 1e-1),
+        ... ('gas', 'mass'): (1e-6, 1e-1),
         ... }
         >>> profile = yt.create_profile(ds.all_data(), ['density', 'temperature'],
-        ...                             fields=['cell_mass'],extrema=extrema,
+        ...                             fields=[('gas', 'mass')],extrema=extrema,
         ...                             fractional=True)
         >>> ph = yt.PhasePlot.from_profile(profile)
         >>> ph.save()
@@ -1346,7 +1346,7 @@ class PhasePlot(ImagePlotContainer):
         Examples
         --------
 
-        >>> plot.set_title("cell_mass", "This is a phase plot")
+        >>> plot.set_title(('gas', 'mass'), "This is a phase plot")
 
         """
         self.plot_title[self.data_source._determine_fields(field)[0]] = title
@@ -1455,7 +1455,7 @@ class PhasePlot(ImagePlotContainer):
 
         >>> import yt
         >>> ds = yt.load('IsolatedGalaxy/galaxy0030/galaxy0030')
-        >>> pp = yt.PhasePlot(ds.all_data(), 'density', 'temperature', 'cell_mass')
+        >>> pp = yt.PhasePlot(ds.all_data(), 'density', 'temperature', ('gas', 'mass'))
         >>> pp.set_xlim(1e-29, 1e-24)
         >>> pp.save()
 
@@ -1493,7 +1493,7 @@ class PhasePlot(ImagePlotContainer):
 
         >>> import yt
         >>> ds = yt.load('IsolatedGalaxy/galaxy0030/galaxy0030')
-        >>> pp = yt.PhasePlot(ds.all_data(), 'density', 'temperature', 'cell_mass')
+        >>> pp = yt.PhasePlot(ds.all_data(), 'density', 'temperature', ('gas', 'mass'))
         >>> pp.set_ylim(1e4, 1e6)
         >>> pp.save()
 
