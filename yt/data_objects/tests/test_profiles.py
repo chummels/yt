@@ -359,9 +359,9 @@ class TestBadProfiles(unittest.TestCase):
         mass = np.random.random((128, 128))
 
         my_data = {
-            "density": density,
-            "temperature": temperature,
-            "mass": mass}
+            ('gas', 'density'): density,
+            ('gas', 'temperature'): temperature,
+            ('gas', 'mass'): mass}
         fake_ds_med = {"current_time": yt.YTQuantity(10, "Myr")}
         # Specify the field type as 'gas' to save_as_dataset
         field_types = {f:'gas' for f in my_data}
@@ -380,9 +380,9 @@ class TestBadProfiles(unittest.TestCase):
         mass = np.random.random((128, 128))
 
         my_data = {
-            "density": density,
-            "temperature": temperature,
-            "mass" : mass}
+            ('gas', 'density'): density,
+            ('gas', 'temperature'): temperature,
+            ('gas', 'mass'): mass}
         fake_ds_med = {"current_time": yt.YTQuantity(10, "Myr")}
         # Specify the field type as 'gas' to save_as_dataset
         field_types = {f:'gas' for f in my_data}
