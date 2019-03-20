@@ -161,7 +161,7 @@ class ProfilePlot(object):
         The weight field for calculating weighted averages.  If None,
         the profile values are the sum of the field values within the bin.
         Otherwise, the values are a weighted average.
-        Default : ('gas', 'mass').
+        Default : 'mass'
     n_bins : int
         The number of bins in the profile.
         Default: 64.
@@ -235,7 +235,7 @@ class ProfilePlot(object):
     _plot_valid = False
 
     def __init__(self, data_source, x_field, y_fields,
-                 weight_field=('gas', 'mass'), n_bins=64,
+                 weight_field='mass', n_bins=64,
                  accumulation=False, fractional=False,
                  label=None, plot_spec=None,
                  x_log=None, y_log=None):
@@ -873,7 +873,7 @@ class PhasePlot(ImagePlotContainer):
         The weight field for calculating weighted averages.  If None,
         the profile values are the sum of the field values within the bin.
         Otherwise, the values are a weighted average.
-        Default : ('gas', 'mass'),
+        Default : 'mass'
     x_bins : int
         The number of bins in x field for the profile.
         Default: 128.
@@ -923,7 +923,7 @@ class PhasePlot(ImagePlotContainer):
     _ylim = (None, None)
 
     def __init__(self, data_source, x_field, y_field, z_fields,
-                 weight_field=('gas', 'mass'), x_bins=128, y_bins=128,
+                 weight_field='mass', x_bins=128, y_bins=128,
                  accumulation=False, fractional=False,
                  fontsize=18, figure_size=8.0):
 
@@ -1466,7 +1466,7 @@ class PhasePlot(ImagePlotContainer):
 
         >>> import yt
         >>> ds = yt.load('IsolatedGalaxy/galaxy0030/galaxy0030')
-        >>> pp = yt.PhasePlot(ds.all_data(), 'density', 'temperature', ('gas', 'mass'))
+        >>> pp = yt.PhasePlot(ds.all_data(), ('gas', 'density'), ('gas', 'temperature'), ('gas', 'mass'))
         >>> pp.set_xlim(1e-29, 1e-24)
         >>> pp.save()
 

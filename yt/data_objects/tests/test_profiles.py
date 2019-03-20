@@ -363,9 +363,7 @@ class TestBadProfiles(unittest.TestCase):
             ('gas', 'temperature'): temperature,
             ('gas', 'mass'): mass}
         fake_ds_med = {"current_time": yt.YTQuantity(10, "Myr")}
-        # Specify the field type as 'gas' to save_as_dataset
-        field_types = {f:'gas' for f in my_data}
-        yt.save_as_dataset(fake_ds_med, "mydata.h5", my_data, field_types=field_types)
+        yt.save_as_dataset(fake_ds_med, "mydata.h5", my_data)
 
         ds = yt.load('mydata.h5')
 
@@ -384,9 +382,7 @@ class TestBadProfiles(unittest.TestCase):
             ('gas', 'temperature'): temperature,
             ('gas', 'mass'): mass}
         fake_ds_med = {"current_time": yt.YTQuantity(10, "Myr")}
-        # Specify the field type as 'gas' to save_as_dataset
-        field_types = {f:'gas' for f in my_data}
-        yt.save_as_dataset(fake_ds_med, "mydata.h5", my_data, field_types=field_types)
+        yt.save_as_dataset(fake_ds_med, "mydata.h5", my_data)
 
         ds = yt.load('mydata.h5')
 
